@@ -1,0 +1,5 @@
+toolbox-config==0.0.2
+
+# --- not must have - only here for the example
+
+requests==2.23.0

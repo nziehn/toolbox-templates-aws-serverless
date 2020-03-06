@@ -1,0 +1,49 @@
+service: tb-aws-lambda-base
+
+
+package:
+  exclude:
+  - .coverage
+  - cover/**
+  - .circleci/**
+
+provider:
+  name: aws
+  runtime: python3.6
+  memorySize: 128
+  timeout: 30
+  logRetentionInDays: 7
+  stage: ${opt:stage, 'development'}
+  environment:
+    ENV: !!str ${self:provider.stage}
+    SENTRY_RELEASE: !!str ${opt:git-commit, 'not-specified'}
+
+  vpc:
+#    securityGroupIds: ${file(./config/${self:provider.stage}.yml):aws.security_group_ids}
+#    subnetIds: ${file(./config/${self:provider.stage}.yml):aws.subnet_ids}
+#    region: ${file(./config/${self:provider.stage}.yml):aws.region}
+    stackTags:
+      SERVICE: ${self:service}
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
+  customDomain:
+    domainName: '${self:service}-${self:provider.stage}.YOUR_DOMAIN_NAME_HERE'
+    stage: ${self:provider.stage}
+    certificateName: 'YOUR_CERTIFICATE_URL_STRING_HERE'
+    createRoute53Record: true
+    endpointType: REGIONAL
+
+plugins:
+  - serverless-python-requirements
+  - serverless-domain-manager
+
+
+functions:
+  example:
+    handler: src/example/handler.run
+    events:
+      - http:
+          path: /
+          method: get

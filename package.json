@@ -1,0 +1,9 @@
+{
+  "name": "tb-aws-lambda-base",
+  "version": "1.0.0",
+  "homepage": "https://github.com/nziehn/tb-aws-lambda-base#readme",
+  "dependencies": {
+    "serverless-domain-manager": "^3.3.1",
+    "serverless-python-requirements": "^5.1.0"
+  }
+}
